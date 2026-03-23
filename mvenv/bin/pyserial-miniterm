@@ -1,0 +1,6 @@
+#!/home/yonguk/바탕화면/Study/000_Secure/000_Dreamhack/000_Pwnable/000_Basic/mvenv/bin/python3
+import sys
+from serial.tools.miniterm import main
+if __name__ == '__main__':
+    sys.argv[0] = sys.argv[0].removesuffix('.exe')
+    sys.exit(main())
