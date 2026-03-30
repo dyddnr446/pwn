@@ -1,10 +1,12 @@
 # 1. 모든 것을 무시
 /*
 
-# 2. 000_Wargame 폴더 자체는 제외
+# 2. 기존 Wargame 폴더 추적 허용
 !/000_Wargame/
-
-# 3. 중요: 000_Wargame 폴더 내부의 모든 파일도 제외 (추적 허용)
 !/000_Wargame/**
+
+# 3. 추가: 현재 작업 중인 Pwnable 관련 폴더 추적 허용
+!/000_Dreamhack/
+!/000_Dreamhack/**
 
 !.gitignore
